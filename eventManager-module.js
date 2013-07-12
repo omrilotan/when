@@ -1,4 +1,4 @@
-// use: var eventManager = require("eventManager-node").fn;
+// use: var eventManager = require("eventManager-module").fn;
 exports.fn = (function () {
     "use strict";
     var exports,    // API
