@@ -38,7 +38,6 @@ var eventManager = (function () {
     // remove a method to the listener
     EventListener.prototype.unlisten = function (method) {
         while (this.methods.indexOf(method) !== -1) {
-            console.log(this.methods.indexOf(method));
             this.methods.splice(this.methods.indexOf(method), 1);
         }
         return this;
