@@ -1,6 +1,11 @@
 // global.process.features.debug = true;
 
-var engage = require("./engage.js");
+if (typeof engage !== "function" &&
+        typeof require === "function") {
+    var engage = require("./engage.js");
+}
+
+
 // single events
 
 // 0
