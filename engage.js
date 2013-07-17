@@ -2,14 +2,16 @@ var engage = (function () {
     "use strict";
     var exports,    // API
         key, // object keys iterator
-        collection = [],    // representing: @String- "event name": @EventListener- related event listener object
+        collection = {},    // representing: @String- "event name": @EventListener- related event listener object
 
         Event = function (name) {
             this.name = name;
             this.hasPlayed = false;
             this.listeners = [];
             return this;
-        };
+        },
+
+        Multiple;
 
     // add methods to the listeners array
     // will be fired each time the event is engaged
@@ -39,27 +41,25 @@ var engage = (function () {
     // will be fired if the event is marked as "hasPlayed"
     // will fire once when the event is engaged, then be removed from the Event by unlisten
     Event.prototype.once = function () {
-        var argument,
-            that,
-            fn;
-        while (arguments.length) {
-            argument = [].pop.call(arguments);
-            if (this.hasPlayed === true) {
-                argument.call(null, {
-                    name: this.name,
-                    data: null
-                });
-                return this;
-            }
-            that = this;
-            this.listen(function fn (data) {
+        var that = this;
+
+        [].forEach.call(arguments, function (argument) {
+            if (that.hasPlayed === true) {
                 argument.call(null, {
                     name: that.name,
-                    data: data
+                    data: null
                 });
-                that.unlisten(fn);
-            });
-        }
+            } else {
+                this.listen(function fn (data) {
+                    argument.call(null, {
+                        name: that.name,
+                        data: data
+                    });
+                    that.unlisten(fn);
+                });
+            }
+        });
+
         return this;
     };
 
@@ -91,42 +91,62 @@ var engage = (function () {
     // emit
     // renew
 
-    var Multiple = function (args) {
-        var name,
-            that = this;
+    Multiple = function (name, args) {
+        var that = this;
+        this.name = name;
         this.events = [];
         [].forEach.call(args, function (item) {
             that.events.push(exports(item));
         });
     };
 
+    // Apply all of the Event prototype methods
     for (key in Event.prototype) {
         if (Event.prototype.hasOwnProperty(key)) {
-            Multiple.prototype[key] = function () {
-                this.events.forEach = function (item) {
-                    item[key].apply(item, arguments);
-                }
-            };
+            (function (fName) {
+                Multiple.prototype[fName] = function () {
+                    var _arguments = arguments;
+                    this.events.forEach(function (item) {
+                        item[fName].apply(item, _arguments);
+                    });
+                };
+            }(key));
         }
     }
 
-    exports = function eventManager (name) {
+    // Interface
+    exports = function () {
         var args = [].join.call(arguments, ",");
 
         // multiple event listener
         if (arguments.length > 1 &&
                 !collection[args]) {
-            collection[args] = new Multiple(arguments);
-        } else {
+            collection[args] = new Multiple(args, arguments);
+            return collection[args];
+        } else if (arguments.length === 1) {
 
             // create new event listener and add it to the collection
-            if (!collection[name]) {
-                collection[name] = new Event(name);
+            if (!collection[args]) {
+                collection[args] = new Event(args);
+                return collection[args];
             }
         }
 
+        return collection[args];
+
         // return relevant event listener
-        return collection[name];
+    };
+
+    exports.list = function () {
+        var names = [],
+            key;
+
+        for (key in collection) {
+            if (collection.hasOwnProperty(key)) {
+                names.push(key);
+            }
+        }
+        return names;
     };
 
     return exports;
@@ -134,4 +154,9 @@ var engage = (function () {
 }());
 
 // for node.js:
-// module.exports = engage;
+if (typeof module !== "undefined" &&
+        typeof module.exports === "object") {
+
+    // export as node module
+    module.exports = engage;
+}

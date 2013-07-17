@@ -1,3 +1,5 @@
+// global.process.features.debug = true;
+
 var engage = require("./engage.js");
 // single events
 
@@ -28,24 +30,28 @@ setTimeout(function () {
 
 
 
-
-engage("multiple one", "multiple two").listen(function () {
-    console.log("multiple: first and second listener");
-});
-
+// Multiple
     
-engage("multiple one", "multiple two", "multiple three").listen(function () {
-    console.log("multiple three");
+engage("multiple one", "multiple two", "multiple three").listen(function (event) {
+    console.log("multiple one, two and three listen - " + event.data);
 });
 
-engage("multiple one").listen(function () {
-    console.log("multiple: first listener");
+engage("multiple one").listen(function (event) {
+    console.log("multiple one listen - " + event.data);
 });
+
+// 4
 
 setTimeout(function () {
-    engage("multiple one", "multiple two").emit();
+    engage("multiple one", "multiple two").emit("multiple one and multiple two emitted");
 }, 2000);
 
+// 5
+
 setTimeout(function () {
-    engage("multiple three").emit();
+    engage("multiple three").emit("multiple three emitted");
 }, 2500);
+
+// setTimeout(function () {
+//     console.log(engage.list());
+// }, 3000);
