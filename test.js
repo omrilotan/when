@@ -1,43 +1,51 @@
-eventManager("simple test").listen(function () {
-    console.log("test: first listener");
-});
+var engage = require("./engage.js");
+// single events
 
+// 0
+engage("simple test").listen(function (event) {
+    console.log(event.data);
+});
+// 1
 setTimeout(function () {
-    eventManager("simple test").emit();
-    eventManager("simple test2").emit();
+    engage("simple test").emit("test: first listener emitted");
+    engage("simple test2").emit("test2: first listener emitted");
 }, 500);
 
+// 2
 setTimeout(function () {
-    eventManager("simple test2").listen(function () {
-        console.log("test2 listener (I should fire later, after Mr. once)");
+    engage("simple test2").listen(function (event) {
+        console.log(event.data);
     });
-    eventManager("simple test2").once(function () {
-        console.log("test2 once");
+    engage("simple test2").once(function (event) {
+        console.log(event.data);
     });
 }, 1000);
 
+// 3
 setTimeout(function () {
-    eventManager("simple test2").emit();
+    engage("simple test2").emit("test2 listener (I should fire later, after Mr. once)");
 }, 1500);
 
 
-eventManager("multiple one, multiple two").listen(function () {
+
+
+engage("multiple one", "multiple two").listen(function () {
     console.log("multiple: first and second listener");
 });
 
     
-eventManager("multiple one, multiple two, multiple three").listen(function () {
+engage("multiple one", "multiple two", "multiple three").listen(function () {
     console.log("multiple three");
 });
 
-eventManager("multiple one").listen(function () {
+engage("multiple one").listen(function () {
     console.log("multiple: first listener");
 });
 
 setTimeout(function () {
-    eventManager("multiple one, multiple two").emit();
+    engage("multiple one", "multiple two").emit();
 }, 2000);
 
 setTimeout(function () {
-    eventManager("multiple three").emit();
+    engage("multiple three").emit();
 }, 2500);
