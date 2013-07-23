@@ -50,7 +50,7 @@ var engage = (function () {
                     data: null
                 });
             } else {
-                this.listen(function fn (data) {
+                that.listen(function fn (data) {
                     argument.call(null, {
                         name: that.name,
                         data: data
