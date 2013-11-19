@@ -127,7 +127,7 @@ var engage = (function () {
 
             // create new event listener and add it to the collection
             if (!collection[args]) {
-                collection[args] = new Event(args);
+                collection[args] = new Engage(args);
                 return collection[args];
             }
         }
