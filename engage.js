@@ -4,7 +4,7 @@ var engage = (function () {
         key, // object keys iterator
         collection = {},    // representing: @String- "event name": @EventListener- related event listener object
 
-        Event = function (name) {
+        Engage = function (name) {
             this.name = name;
             this.hasPlayed = false;
             this.listeners = [];
@@ -15,7 +15,7 @@ var engage = (function () {
 
     // add methods to the listeners array
     // will be fired each time the event is engaged
-    Event.prototype.listen = function () {
+    Engage.prototype.listen = function () {
         var argument;
         while (arguments.length) {
             argument = [].pop.call(arguments);
@@ -27,7 +27,7 @@ var engage = (function () {
     };
 
     // remove methods to the listener
-    Event.prototype.unlisten = function () {
+    Engage.prototype.unlisten = function () {
         var argument;
         while (arguments.length) {
             argument = [].pop.call(arguments);
@@ -39,8 +39,8 @@ var engage = (function () {
     };
 
     // will be fired if the event is marked as "hasPlayed"
-    // will fire once when the event is engaged, then be removed from the Event by unlisten
-    Event.prototype.once = function () {
+    // will fire once when the event is engaged, then be removed from the Engage by unlisten
+    Engage.prototype.once = function () {
         var that = this;
 
         [].forEach.call(arguments, function (argument) {
@@ -64,7 +64,7 @@ var engage = (function () {
     };
 
     // emit the Event, mark it's "hasPlayed" to true, and fire all listeners
-    Event.prototype.emit = function (data) {
+    Engage.prototype.emit = function (data) {
         var i = 0,
             len = this.listeners.length;
         while (i < len) {
@@ -80,7 +80,7 @@ var engage = (function () {
 
     // mark it's "hasPlayed" attribute to false
     // this is cool for using .once() later on
-    Event.prototype.renew = function () {
+    Engage.prototype.renew = function () {
         this.hasPlayed = false;
         return this;
     };
@@ -101,8 +101,8 @@ var engage = (function () {
     };
 
     // Apply all of the Event prototype methods
-    for (key in Event.prototype) {
-        if (Event.prototype.hasOwnProperty(key)) {
+    for (key in Engage.prototype) {
+        if (Engage.prototype.hasOwnProperty(key)) {
             (function (fName) {
                 Multiple.prototype[fName] = function () {
                     var _arguments = arguments;
