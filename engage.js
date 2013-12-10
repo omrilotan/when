@@ -66,12 +66,15 @@ var engage = (function () {
     // emit the Event, mark it's "hasPlayed" to true, and fire all listeners
     Engage.prototype.emit = function (data) {
         var i = 0,
-            len = this.listeners.length;
+            len = this.listeners.length,
+            
+            // Add the context data
+            evt = typeof data === "object" ? data : {};
+        
+        evt.name = this.name;
+        
         while (i < len) {
-            this.listeners[i].call(null, {
-                name: this.name,
-                data: data
-            });
+            this.listeners[i].call(null, evt);
             ++i;
         }
         this.hasPlayed = true;
