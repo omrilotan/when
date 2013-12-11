@@ -80,7 +80,7 @@ var engage = (function __engage__ () {
         renew: function engage$renew () {
             this.hasPlayed = false;
             return this;
-        },
+        }
     };
 
     // Get a list of all event names in the collection
