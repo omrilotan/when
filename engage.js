@@ -80,6 +80,12 @@ var engage = (function __engage__ () {
         renew: function engage$renew () {
             this.hasPlayed = false;
             return this;
+        },
+        
+        // Remove all methods from the listeners array
+        clear: function engage$clear () {
+            this.listeners = [];
+            return this;
         }
     };
 
